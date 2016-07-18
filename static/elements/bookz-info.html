@@ -51,9 +51,35 @@
     <script>
         Polymer({
             is: 'bookz-info',
+            behaviors:[Polymer.NeonAnimationRunnerBehavior],
             properties:{
-                book:Object
+                book:{
+                    type:Object,
+                    value:function(){
+                        return {};
+                    },
+                    observer:'bookChanged'
+                },
+                animationConfig:{
+                    value:function(){
+                        return {
+                            'fade':{
+                                name: 'fade-in-animation',
+                                node: this,
+                                timing: {
+                                    delay: 50
+                                }
+                            }
+                        };
+                    }
+                }
+            },
+
+            bookChanged:function(){
+                this.playAnimation('fade');
+                console.log('changed');
             }
+
         });
     </script>
 </dom-module>

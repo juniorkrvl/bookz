@@ -5,10 +5,14 @@
         }
 
         #searchControl{
-            margin-top:10vh;
+            margin-top:30vh;
             margin-left:auto;
             margin-right:auto;
             text-align:center;
+            -webkit-transition: margin-top 0.5s; /* Safari */
+            transition: margin-top 0.5s;
+            -webkit-transition-timing-function: ease-in-out;
+            transition-timing-function: ease-in-out;
         }
 
         .input{
@@ -34,6 +38,13 @@
             width:130px;
             height:130px;
             margin-bottom:15px;
+            transition: all 0.5s ease-out;
+        }
+
+        #paperSpinner{
+            margin:auto;
+            padding:20px;
+            --paper-spinner-color: #C1233C;
         }
 
     </style>
@@ -45,10 +56,11 @@
             
         <div id="searchControl">
             <img id="logo" src="../img/newlogo.png" alt="Logo">
-            <div class="input layout horizontal">
+            <div id="inputContainer" class="input layout horizontal">
                 <input id="search" type="text" placeholder="Pesquise por Título ou ISBN..." name="Search" value="{{search::input}}" class="flex" on-keydown="enterKey">
                 <a href="#" on-click="performSearch"><img src="../img/search.png" alt="Search"></a>        
             </div>  
+            <paper-spinner-lite id="paperSpinner" active$="{{spinner}}"></paper-spinner>
         </div>            
         <bookz-results books="[[books]]"></bookz-results>
     </template>
@@ -63,9 +75,13 @@
                     value:function(){
                         return [];
                     }
+                },
+                spinner:{
+                    type:Boolean,
+                    value:false
                 }
             },
-
+            
             enterKey:function(e){
                 if (e.keyCode === 13) {
                     this.performSearch();
@@ -75,8 +91,13 @@
             performSearch: function(){
 
                 if(localStorage.books){
-                    this.books = JSON.parse(localStorage.books);
-                    this.$.searchControl.style.marginTop = '0vh';
+                    var self = this;
+                    self.showSpinner();
+                    self.playAnimation();
+                    setTimeout(function () {
+                        self.showSpinner(false);
+                        self.books = JSON.parse(localStorage.books);
+                    }, 1300);
                     return;
                 }
 
@@ -92,11 +113,12 @@
                         options,
                         function(response){
                             var result = JSON.parse(response.target.lastResponse);
+                            this.playAnimation();
+                            setTimeout('', 3000);
                             self.books = result.items;
                             var obj = JSON.stringify(self.books);
                             localStorage.setItem("books",obj);
                             //Polymer.dom(self.$.searchControl).customStyle['margin-top'] = '0vh';
-                            self.$.searchControl.style.marginTop = '0vh';
                             //Polymer.dom(self.$.searchControl).updateStyles();
                             //self.notifyPath('this.books', this.books);
                             console.log(self.books);
@@ -117,6 +139,26 @@
                 this.$.ironAjax.addEventListener('response',response);
                 this.$.ironAjax.addEventListener('error',error);
                 this.$.ironAjax.generateRequest();
+            },
+
+            playAnimation: function(){
+                this.$.searchControl.style.marginTop = '0vh';
+                this.$.logo.style.transform = 'scale(0.8)';
+                this.$.logo.style.width = '100px';
+                this.$.logo.style.height = '100px';
+                this.$.logo.style.marginBottom = '0px';
+                this.$.inputContainer.style.padding='5px';
+            },
+
+            showSpinner: function(show=true){
+                if(show){
+                    this.$.paperSpinner.style.display = 'inline-block';
+                    this.spinner = true;
+                }
+                else{
+                    this.spinner = false;
+                    this.$.paperSpinner.style.display = 'none';
+                }
             }
 
         });
