@@ -1,0 +1,18 @@
+<dom-module id="bookz-app">
+    <style include="iron-flex">
+        :host{
+            @apply(--layout-vertical);
+            @apply(--layout-flex);
+            background:#FDFCFA;
+            /*height:30vh;*/
+        }
+    </style>
+    <template>
+        <bookz-search></bookz-search>
+    </template>
+    <script>
+        Polymer({
+            is: 'bookz-app'
+        });
+    </script>
+</dom-module>

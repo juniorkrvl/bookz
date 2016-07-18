@@ -1,0 +1,30 @@
+<dom-module id="bookz-results">
+    <style>
+        :host{
+            @apply(--layout-flex);
+            @apply(--layout-wrap);
+            width:95%;
+            padding:40px 15px 15px 25px;
+            margin:auto;
+            text-align:left;
+        }
+
+    </style>
+    <template>
+        <template is="dom-repeat" items={{books}}>
+            <bookz-info book="{{item}}"></bookz-info>
+        </template>    
+    </template>
+    <script>
+        Polymer({
+            is: 'bookz-results',
+            properties:{
+                books:{
+                    type:Array,
+                    notify:true
+                }
+            }
+
+        });
+    </script>
+</dom-module>

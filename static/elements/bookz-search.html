@@ -1,0 +1,124 @@
+<dom-module id="bookz-search">
+    <style include="iron-flex iron-positioning">
+        :host{
+            @apply(--layout-vertical);
+        }
+
+        #searchControl{
+            margin-top:10vh;
+            margin-left:auto;
+            margin-right:auto;
+            text-align:center;
+        }
+
+        .input{
+            @apply(--layout-center);
+            border: 1px solid #A0A09F;
+            border-radius: 3px;
+            width:550px;
+            padding:10px;
+        }
+
+        .input > input {
+            line-height:12px;
+            font-size:16px;
+            border:none;
+            background:#FDFCFA;
+        }
+
+        .input > input:focus {
+            outline:none;
+        }
+
+        #logo{
+            width:130px;
+            height:130px;
+            margin-bottom:15px;
+        }
+
+    </style>
+    <template>
+        <iron-ajax id="ironAjax"
+            url=""
+            handle-as="json">
+        </iron-ajax>
+            
+        <div id="searchControl">
+            <img id="logo" src="../img/newlogo.png" alt="Logo">
+            <div class="input layout horizontal">
+                <input id="search" type="text" placeholder="Pesquise por Título ou ISBN..." name="Search" value="{{search::input}}" class="flex" on-keydown="enterKey">
+                <a href="#" on-click="performSearch"><img src="../img/search.png" alt="Search"></a>        
+            </div>  
+        </div>            
+        <bookz-results books="[[books]]"></bookz-results>
+    </template>
+    <script>
+        Polymer({
+            is: 'bookz-search',
+            properties:{
+                search:String,
+                books:{
+                    type:Array,
+                    notify:true,
+                    value:function(){
+                        return [];
+                    }
+                }
+            },
+
+            enterKey:function(e){
+                if (e.keyCode === 13) {
+                    this.performSearch();
+                }
+            },
+
+            performSearch: function(){
+
+                if(localStorage.books){
+                    this.books = JSON.parse(localStorage.books);
+                    this.$.searchControl.style.marginTop = '0vh';
+                    return;
+                }
+
+                var self = this;
+                if(this.search != undefined && this.search != ''){
+
+                    var options = {
+                        url:'https://www.googleapis.com/books/v1/volumes?q=' + escape(this.search) + '&key=AIzaSyDXBOBg2sXHNiE7uj5Igq7pWSI5L7_zzds',
+                        method:'GET'
+                    };                  
+
+                    this.ajaxRequest(
+                        options,
+                        function(response){
+                            var result = JSON.parse(response.target.lastResponse);
+                            self.books = result.items;
+                            var obj = JSON.stringify(self.books);
+                            localStorage.setItem("books",obj);
+                            //Polymer.dom(self.$.searchControl).customStyle['margin-top'] = '0vh';
+                            self.$.searchControl.style.marginTop = '0vh';
+                            //Polymer.dom(self.$.searchControl).updateStyles();
+                            //self.notifyPath('this.books', this.books);
+                            console.log(self.books);
+                        },
+                        function(error){
+                            console.log(error);
+                        }
+                    );
+                }
+            },
+
+            ajaxRequest: function(options,response,error){
+                this.$.ironAjax.url = options.url;
+                this.$.ironAjax.body = options.body;
+                this.$.ironAjax.method = options.method;
+                this.$.ironAjax.contentType = options.contentType;
+                this.$.ironAjax.handleAs = options.handleAs;
+                this.$.ironAjax.addEventListener('response',response);
+                this.$.ironAjax.addEventListener('error',error);
+                this.$.ironAjax.generateRequest();
+            }
+
+        });
+    </script>
+</dom-module>

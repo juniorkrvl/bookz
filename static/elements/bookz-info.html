@@ -1,0 +1,59 @@
+
+<dom-module id="bookz-info">
+    <style>
+
+        :host{
+            @apply(--layout-flex);
+        }
+
+        img{
+            height:194px;
+            width:128px;
+            margin:3px;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-radius:8px;
+        }
+
+        a img{
+            transition: all .1s ease-in-out;
+        }
+
+        a img:hover{
+            transform: scale(1.2);
+            
+        }
+
+         /*
+            :host ::content > div{
+                padding-right:20px;
+                text-align:center;
+                margin-bottom:10px;
+                height:251px;
+            }
+
+            :host ::content > div > img{
+                transition: all .1s ease-in-out;
+                width:167px;
+                height:251px;
+                border: 2px solid #fff;
+            }
+
+            :host ::content > div[focused] > img{
+                transform: scale(1.2);
+                border: 2px solid #0099ff;
+            }*/
+
+    </style>
+    <template>
+        <a href=""><img src="{{book.volumeInfo.imageLinks.thumbnail}}" alt=""></a>
+    </template>
+    <script>
+        Polymer({
+            is: 'bookz-info',
+            properties:{
+                book:Object
+            }
+        });
+    </script>
+</dom-module>

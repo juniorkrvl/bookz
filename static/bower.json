@@ -1,0 +1,17 @@
+{
+  "name": "Bookz",
+  "authors": [
+    "Junior Carvalho <junior@btfit.com.br>"
+  ],
+  "description": "Books finder for read.",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
