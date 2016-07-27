@@ -50,7 +50,6 @@
     </style>
     <template>
         <iron-ajax id="ironAjax"
-            url=""
             handle-as="json">
         </iron-ajax>
             
@@ -113,7 +112,7 @@
                         options,
                         function(response){
                             var result = JSON.parse(response.target.lastResponse);
-                            this.playAnimation();
+                            self.playAnimation();
                             setTimeout('', 3000);
                             self.books = result.items;
                             var obj = JSON.stringify(self.books);

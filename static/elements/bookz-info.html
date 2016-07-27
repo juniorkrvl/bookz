@@ -46,7 +46,8 @@
 
     </style>
     <template>
-        <a href=""><img src="{{book.volumeInfo.imageLinks.thumbnail}}" alt=""></a>
+        <iron-ajax id="ironAjax"></iron-ajax>      
+        <a href="#" on-click="searchLinks"><img src="{{book.volumeInfo.imageLinks.thumbnail}}" alt=""></a>
     </template>
     <script>
         Polymer({
@@ -59,6 +60,10 @@
                         return {};
                     },
                     observer:'bookChanged'
+                },
+                links:{
+                    type:Array,
+                    notify:true
                 },
                 animationConfig:{
                     value:function(){
@@ -78,6 +83,41 @@
             bookChanged:function(){
                 this.playAnimation('fade');
                 console.log('changed');
+            },
+
+            searchLinks: function(){
+                var title = this.book.volumeInfo.title;
+                var self = this;
+
+                var options = {
+                    url:'https://www.googleapis.com/customsearch/v1?q=' + escape(title) + '&cx=006700616094406362025%3Aixgmr_xerri&fileType=pdf&key=AIzaSyDXBOBg2sXHNiE7uj5Igq7pWSI5L7_zzds',
+                    method:'GET'
+                };
+
+                this.ajaxRequest(
+                    options,
+                    function(response){
+                        var result = JSON.parse(response.target.lastResponse);
+                        self.links = result.items;
+                        //self.$.bookzLinks.open();
+                        console.log(self.books);
+                    },
+                    function(error){
+                        console.log(error);
+                    }
+                );
+                
+            },
+
+            ajaxRequest: function(options,response,error){
+                this.$.ironAjax.url = options.url;
+                this.$.ironAjax.body = options.body;
+                this.$.ironAjax.method = options.method;
+                this.$.ironAjax.contentType = options.contentType;
+                this.$.ironAjax.handleAs = options.handleAs;
+                this.$.ironAjax.addEventListener('response',response);
+                this.$.ironAjax.addEventListener('error',error);
+                this.$.ironAjax.generateRequest();
             }
 
         });

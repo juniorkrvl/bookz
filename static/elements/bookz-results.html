@@ -12,8 +12,15 @@
     </style>
     <template>
         <template is="dom-repeat" items={{books}}>
-            <bookz-info book="{{item}}"></bookz-info>
-        </template>    
+            <bookz-info book="{{item}}" links="{{links}}"></bookz-info>
+        </template>
+        <bookz-links id="plain">
+            <ul>
+                <template is="dom-repeat" items={{links}}>
+                    <li>{{item.link}}</li>    
+                </template>                
+            </ul>        
+        </bookz-links>
     </template>
     <script>
         Polymer({
@@ -22,8 +29,18 @@
                 books:{
                     type:Array,
                     notify:true
+                },
+                links:{
+                    type:Array,
+                    notify:true,
+                    observer:'_onLinksChanged'
                 }
+            },
+
+            _onLinksChanged: function(){
+                //this.$.bookzLinks.opened = true;
             }
+
         });
     </script>
 </dom-module>
