@@ -103,6 +103,9 @@
                 var self = this;
                 if(this.search != undefined && this.search != ''){
 
+                    self.showSpinner();
+                    self.playAnimation();
+
                     var options = {
                         url:'https://www.googleapis.com/books/v1/volumes?q=' + escape(this.search) + '&key=AIzaSyDXBOBg2sXHNiE7uj5Igq7pWSI5L7_zzds',
                         method:'GET'
@@ -111,16 +114,21 @@
                     this.ajaxRequest(
                         options,
                         function(response){
+                            self.showSpinner(false);
                             var result = JSON.parse(response.target.lastResponse);
-                            self.playAnimation();
-                            setTimeout('', 3000);
+                            //self.playAnimation();
+                            //setTimeout('', 3000);
                             self.books = result.items;
-                            var obj = JSON.stringify(self.books);
-                            localStorage.setItem("books",obj);
+                            
+                            //Local test
+                            //var obj = JSON.stringify(self.books);
+                            //localStorage.setItem("books",obj);
+                            // #########
+
                             //Polymer.dom(self.$.searchControl).customStyle['margin-top'] = '0vh';
                             //Polymer.dom(self.$.searchControl).updateStyles();
                             //self.notifyPath('this.books', this.books);
-                            console.log(self.books);
+                            //console.log(self.books);
                         },
                         function(error){
                             console.log(error);

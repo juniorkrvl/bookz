@@ -82,7 +82,7 @@
 
             bookChanged:function(){
                 this.playAnimation('fade');
-                console.log('changed');
+                //console.log('changed');
             },
 
             searchLinks: function(){
@@ -100,7 +100,7 @@
                         var result = JSON.parse(response.target.lastResponse);
                         self.links = result.items;
                         //self.$.bookzLinks.open();
-                        console.log(self.books);
+                        //console.log(self.books);
                     },
                     function(error){
                         console.log(error);

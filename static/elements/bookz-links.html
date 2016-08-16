@@ -1,15 +1,45 @@
 
 <dom-module id="bookz-links">
     <style>
-        :host {
+        /*:host {
             background: white;
             color: black;
             padding: 24px;
             box-shadow: rgba(0, 0, 0, 0.24) -2px 5px 12px 0px, rgba(0, 0, 0, 0.12) 0px 0px 12px 0px;
+        }*/
+        :host{
+            padding:10px;
         }
+
+        #paperDialog{
+            padding:20px;
+        }
+
+        ul{
+            list-style-type: none;
+            -webkit-margin-before: 0px;
+            -webkit-margin-after: 0px;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+            -webkit-padding-start: 0px;
+        }
+
+
     </style>    
     <template>
-        <content></content>
+        <paper-dialog id="paperDialog">
+            <h2>Selecione o link desejado</h2>
+            <paper-dialog-scrollable>
+                <ul>
+                    <template is="dom-repeat" items={{links}}>
+                        <li><a href="{{item.link}}">{{item.title}}</a></li>    
+                    </template>                
+                </ul>  
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button raised dialog-dismiss on-click="_closeDialog">Fechar</paper-button>
+            </div>
+        </paper-dialog>
     </template>
     <script>
         Polymer({
@@ -17,11 +47,24 @@
             properties:{
                 links:{
                     type: Array
+                },
+                opened: {
+                    type:Boolean,
+                    notify:true,
+                    observer: '_openedChanged'
                 }
             },
-            behaviors:[
-                'Polymer.IronOverlayBehavior'
-            ]
+
+            _openedChanged: function(){
+                if(this.opened){
+                    this.$.paperDialog.open();
+                }
+            },
+
+            _closeDialog: function(){
+                this.opened = false;
+            }
+
         });
     </script>
 </dom-module>
